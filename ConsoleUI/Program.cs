@@ -16,6 +16,8 @@ namespace ConsoleUI
             {
                 Console.WriteLine(category.CategoryName);
             }
+
+            Console.WriteLine(categoryManager.GetAll().Count);
         }
 
         private static void ProductTest()
