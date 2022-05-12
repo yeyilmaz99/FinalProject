@@ -35,11 +35,11 @@ namespace Business.Concrete
         {
             if(DateTime.Now.Hour == 22)
             {
-                return  new ErrorDataResult();
+                return  new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             }
 
             // iş kodları
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),true,"Ürünler Listelendi");
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
         }
 
         public List<Product> GetAllByCategoryId(int id)
