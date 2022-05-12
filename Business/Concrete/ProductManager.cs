@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -19,9 +20,10 @@ namespace Business.Concrete
             _productDal = productDal;
         }
 
-        public void Add(Product product)
+        public IResult Add(Product product)
         {
-           _productDal.Add(product);
+            _productDal.Add(product);
+            return new Result(true,"Product added");
         }
 
         public List<Product> GetAll()
