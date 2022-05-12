@@ -37,7 +37,7 @@ namespace Business.Concrete
 
         public Product GetById(int productId)
         {
-            throw new NotImplementedException();
+            _productDal.Get(p => p.ProductId == productId);
         }
 
         public List<Product> GetByUnitPrice(decimal min, decimal max)
