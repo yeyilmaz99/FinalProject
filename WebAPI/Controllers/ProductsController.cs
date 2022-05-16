@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
             _productService = productService;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public IActionResult Get()
         {
             //swagger
@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet]
+        [HttpGet("getbyid")]
         public IActionResult Get(int id)
         {
             var result = _productService.GetById(id);
@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult Post(Product product)
         {
             var result = _productService.Add(product);
