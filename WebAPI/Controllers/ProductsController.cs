@@ -36,6 +36,17 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet]
+        public IActionResult Get(int id)
+        {
+            var result = _productService.GetById(id);
+            if(result.Success== true)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
 
         [HttpPost]
         public IActionResult Post(Product product)
