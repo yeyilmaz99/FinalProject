@@ -23,13 +23,17 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public List<Product> Get()
+        public IActionResult Get()
         {
+            //swagger
             //dependency chain
             
             var result = _productService.GetAll();
-
-            return result.Data;
+            if(result.Success== true)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
         }
     }
 }
