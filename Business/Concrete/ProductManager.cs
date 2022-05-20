@@ -26,7 +26,7 @@ namespace Business.Concrete
 
         public IResult Add(Product product)
         {
-            ValidationTool.Validate(new Product);
+            //ValidationTool.Validate(new Product);
 
 
             _productDal.Add(product);
