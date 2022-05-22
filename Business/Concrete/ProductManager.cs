@@ -4,6 +4,7 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -20,29 +21,29 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
+        ICategoryService _categoryService;
 
-        public ProductManager(IProductDal productDal)
+        public ProductManager(IProductDal productDal, ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
         }
 
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
+            IResult result = BusinessRules.Run(CheckIfProductNameExist(product.ProductName),
+                 CheckIfProductCountOfCatagoryCorrect(product.CategoryId),
+                 CheckIfCategoryLimitExceded());
 
-
-
-
-            if (CheckIfProductCountOfCatagoryCorrect(product.ProductId).Success)
+            if (result != null)
             {
-                if (CheckIfProductNameExist(product.ProductName).Success)
-                {
-                    _productDal.Add(product);
-                    return new SuccessResult(Messages.ProductAdded);
-                }
+                return result;
             }
-            return new ErrorResult();
 
+            _productDal.Add(product);
+
+            return new SuccessResult(Messages.ProductAdded);
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -53,7 +54,7 @@ namespace Business.Concrete
             //}
 
             // iş kodları
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductsListed);
         }
 
         public IDataResult<List<Product>> GetAllByCategoryId(int id)
@@ -77,7 +78,7 @@ namespace Business.Concrete
             {
                 return new ErrorDataResult<List<ProductDetailDto>>(Messages.MaintenanceTime);
             }
-            return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails()); 
+            return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails());
         }
 
         [ValidationAspect(typeof(ProductValidator))]
@@ -113,6 +114,19 @@ namespace Business.Concrete
             if (result)
             {
                 return new ErrorResult(Messages.ProductNameIsAlreadyExist);
+            }
+            return new SuccessResult();
+
+        }
+
+
+        private IResult CheckIfCategoryLimitExceded()
+        {
+            var result = _categoryService.GetAll();
+
+            if (result.Data.Count >= 15)
+            {
+                return new ErrorResult(Messages.CategoryLimitExceded);
             }
             return new SuccessResult();
 
