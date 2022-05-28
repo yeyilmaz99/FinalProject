@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.BusinessAspects.Autofac;
 
 namespace Business.Concrete
 {
@@ -32,7 +33,7 @@ namespace Business.Concrete
 
 
 
-        
+        [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
@@ -130,7 +131,7 @@ namespace Business.Concrete
 
             if (result.Data.Count >= 15)
             {
-                return new ErrorResult(Messages.CategoryLimitExceded);
+                return new ErrorResult(Messages.CategoryLimitExceeded);
             }
             return new SuccessResult();
 
