@@ -5,6 +5,8 @@ using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading;
+
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -27,7 +29,8 @@ namespace WebAPI.Controllers
         {
             //swagger
             //dependency chain
-            
+            Thread.Sleep(1000);
+
             var result = _productService.GetAll();
             if(result.Success== true)
             {
@@ -37,16 +40,32 @@ namespace WebAPI.Controllers
 
         }
 
+
         [HttpGet("getbyid")]
         public IActionResult Get(int id)
         {
             var result = _productService.GetById(id);
-            if(result.Success== true)
+            if (result.Success == true)
             {
                 return Ok(result);
             }
             return BadRequest(result);
         }
+
+        [HttpGet("getbycategory")]
+        public IActionResult GetByCategory(int categoryId)
+        {
+            var result = _productService.GetAllByCategoryId(categoryId);
+            if (result.Success == true)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+
+
 
 
         [HttpPost("add")]
